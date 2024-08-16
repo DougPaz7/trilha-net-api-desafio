@@ -27,15 +27,15 @@ namespace TrilhaApiDesafio.Controllers
             if (tarefa == null)
                 return NotFound();
 
-            return Ok();
+            return Ok(tarefa);
         }
 
         [HttpGet("ObterTodos")]
         public IActionResult ObterTodos()
         {
-            // TODO: Buscar todas as tarefas no banco utilizando o EF
+            //TODO: Buscar todas as tarefas no banco utilizando o EF
 
-            var tarefa = _context.Tarefas.Find();
+            var tarefa = _context.Tarefas;
 
             return Ok(tarefa);
         }
@@ -45,7 +45,9 @@ namespace TrilhaApiDesafio.Controllers
         {
             // TODO: Buscar  as tarefas no banco utilizando o EF, que contenha o titulo recebido por parâmetro
             // Dica: Usar como exemplo o endpoint ObterPorData
-            return Ok();
+
+            var tarefa = _context.Tarefas.Where(x => x.Titulo.Contains(titulo));
+            return Ok(tarefa);
         }
 
         [HttpGet("ObterPorData")]
@@ -91,10 +93,12 @@ namespace TrilhaApiDesafio.Controllers
             // TODO: Atualizar as informações da variável tarefaBanco com a tarefa recebida via parâmetro
             // TODO: Atualizar a variável tarefaBanco no EF e salvar as mudanças (save changes)
 
+            tarefaBanco.Status = tarefa.Status;
+
             _context.Tarefas.Update(tarefaBanco);
             _context.SaveChanges();
 
-            return Ok();
+            return Ok(tarefaBanco);
         }
 
         [HttpDelete("{id}")]
@@ -106,6 +110,10 @@ namespace TrilhaApiDesafio.Controllers
                 return NotFound();
 
             // TODO: Remover a tarefa encontrada através do EF e salvar as mudanças (save changes)
+
+            _context.Tarefas.Remove(tarefaBanco);
+            _context.SaveChanges();
+
             return NoContent();
         }
     }
